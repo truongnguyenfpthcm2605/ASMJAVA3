@@ -12,6 +12,24 @@ import java.util.List;
  * @author truong
  */
 public class DataAccessObject {
-    public List<Object> list = new ArrayList<>();
+
+    public List<Users> list = new ArrayList<>();
+
+    public DataAccessObject() {
+        list.add(new Users("truong", "12345", "sv"));
+        list.add(new Users("nam", "12345", "sv"));
+        list.add(new Users("trung", "12345", "sv"));
+        list.add(new Users("quoc", "12345", "gv"));
+        list.add(new Users("nghia", "12345", "gv"));
+    }
+
+    public boolean checkLogin(String user, String pass) {
+        for (Users users : list) {
+            if (users.getUser().equals(user) && pass.equals(pass)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
