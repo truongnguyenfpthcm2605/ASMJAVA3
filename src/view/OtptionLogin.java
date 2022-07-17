@@ -94,14 +94,18 @@ public class OtptionLogin extends javax.swing.JFrame {
 
     private void btnStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentActionPerformed
        ShowFormLogin();
+       this.dispose();
+       
     }//GEN-LAST:event_btnStudentActionPerformed
 
     private void btnTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherActionPerformed
           ShowFormLogin();
+          this.dispose();
     }//GEN-LAST:event_btnTeacherActionPerformed
 
     private void btnEducationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducationActionPerformed
            ShowFormLogin();
+           this.dispose();
     }//GEN-LAST:event_btnEducationActionPerformed
 
     /**

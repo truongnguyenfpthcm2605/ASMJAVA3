@@ -30,9 +30,9 @@
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="174" max="-2" attributes="0"/>
-              <Component id="btnLogin" min="-2" pref="89" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-              <Component id="btnCancel" min="-2" pref="89" max="-2" attributes="0"/>
+              <Component id="btnLogin" min="-2" pref="107" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnCancel" min="-2" pref="108" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
@@ -53,7 +53,7 @@
                   <Component id="btnCancel" min="-2" max="-2" attributes="0"/>
                   <Component id="btnLogin" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="0" pref="20" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -148,6 +148,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Show Password"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckbShowpassActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="ckbRemember">
           <Properties>
@@ -158,6 +161,9 @@
     </Container>
     <Component class="javax.swing.JButton" name="btnLogin">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Icon/Login-icon.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
       <Events>
@@ -166,8 +172,14 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnCancel">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Icon/exit-Close-icon.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Cancel"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

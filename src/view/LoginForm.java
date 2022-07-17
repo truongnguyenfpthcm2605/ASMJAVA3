@@ -4,17 +4,19 @@
  */
 package view;
 
+import DataBase.ShareDataUSer;
+import DataBase.userDAO;
 import java.awt.Color;
 import javax.swing.JOptionPane;
-import model.DataAccessObject;
+
 
 /**
  *
  * @author truong
  */
 public class LoginForm extends javax.swing.JFrame {
-    DataAccessObject data = new DataAccessObject();
-      
+   
+      userDAO dataUser = new userDAO();
     /**
      * Creates new form LoginForm
      */
@@ -35,7 +37,7 @@ public class LoginForm extends javax.swing.JFrame {
         }
       String pass = new String(txtPass.getPassword());
         if (pass.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter user name , user name is not empty");
+            JOptionPane.showMessageDialog(this, "Please enter password ,Password is not empty");
             txtPass.setBackground(Color.yellow);
             return false;
         } else {
@@ -80,6 +82,11 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel4.setText("Password :");
 
         ckbShowpass.setText("Show Password");
+        ckbShowpass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckbShowpassActionPerformed(evt);
+            }
+        });
 
         ckbRemember.setText("Remember");
 
@@ -120,6 +127,7 @@ public class LoginForm extends javax.swing.JFrame {
                 .addGap(16, 16, 16))
         );
 
+        btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Login-icon.png"))); // NOI18N
         btnLogin.setText("Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,7 +135,13 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
 
+        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/exit-Close-icon.png"))); // NOI18N
         btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,9 +153,9 @@ public class LoginForm extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(174, 174, 174)
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(62, 62, 62)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -158,21 +172,40 @@ public class LoginForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCancel)
                     .addComponent(btnLogin))
-                .addGap(0, 20, Short.MAX_VALUE))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if(checkForm()){
-            if(data.checkLogin(txtUser.getText(), String.valueOf(txtPass.getPassword()))){
-                JOptionPane.showMessageDialog(this, "Login SuccsessFull");
-                MarksManager mark = new MarksManager();
-                mark.setVisible(true);
+        try {
+            if(checkForm()){
+                   String pass = new String(txtPass.getPassword());
+                if(dataUser.checkLogin(txtUser.getText(), pass)!= null){
+                    JOptionPane.showMessageDialog(this, "Login Successfull");
+                    ShareDataUSer.InforUser = dataUser.checkLogin(txtUser.getText(), pass);
+                    StudentManager st = new StudentManager();
+                    st.setVisible(true);
+                    this.dispose();
+            }else{
+                    JOptionPane.showMessageDialog(this, "Wrong user or password");
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void ckbShowpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbShowpassActionPerformed
+        txtPass.setEchoChar((char)0);
+    }//GEN-LAST:event_ckbShowpassActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        this.dispose();
+        OtptionLogin option = new OtptionLogin();
+        option.setVisible(true);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments
