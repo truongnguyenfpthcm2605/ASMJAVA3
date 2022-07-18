@@ -11,8 +11,8 @@ package model;
 public class CheckData {
 
     public boolean checkName(String a) {
-             
-        if (a.length()< 10) {
+
+        if (a.length() < 10) {
             return false;
         }
         return true;
@@ -31,6 +31,24 @@ public class CheckData {
     public boolean checkMaSv(String ma) {
         String parttern = "^[PS]+[0-9]{5}$";
         return ma.matches(parttern);
+    }
+
+    public boolean checkID(String id) {
+        String parttern = "^[A-Z0-9]{5}$";
+        return id.matches(parttern);
+    }
+
+    public boolean CheckPoint(String math) {
+        try {
+            Float a = Float.parseFloat(math);
+            if (a < 0 || a > 10) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }

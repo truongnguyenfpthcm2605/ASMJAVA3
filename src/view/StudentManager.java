@@ -24,7 +24,7 @@ import model.Student;
 public class StudentManager extends javax.swing.JFrame {
 
     DefaultTableModel tableModel = new DefaultTableModel();
-    String linkImage = "./src/Image/anhmacdinh.png";
+    String linkImage = "./src/ImageMD/anh.png";
     CheckData data = new CheckData();
     StudentDAO dataList = new StudentDAO();
 
@@ -135,7 +135,7 @@ public class StudentManager extends javax.swing.JFrame {
             txtAddress.setBackground(Color.white);
         }
         // check img
-        if (linkImage.equals("./src/Image/anhmacdinh.png")) {
+        if (linkImage.equals("./src/ImageMD/anh.png")) {
             JOptionPane.showMessageDialog(this, "Please choose image");
             return false;
         }
@@ -149,7 +149,7 @@ public class StudentManager extends javax.swing.JFrame {
         txtEmail.setText("");
         txtPhone.setText("");
         txtAddress.setText("");
-        linkImage = "./src/Image/anhmacdinh.png";
+        linkImage = "./src/ImageMD/anh.png";
         lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
         txtID.setBackground(Color.WHITE);
         txtName.setBackground(Color.WHITE);
@@ -157,14 +157,10 @@ public class StudentManager extends javax.swing.JFrame {
         txtPhone.setBackground(Color.WHITE);
         txtAddress.setBackground(Color.WHITE);
 
-
     }
 
     private boolean chooseGender() {
-        if (rdoMale.isSelected()) {
-            return true;
-        }
-        return false;
+        return rdoMale.isSelected();
     }
 
     public String Gender(boolean a) {
@@ -179,8 +175,8 @@ public class StudentManager extends javax.swing.JFrame {
             tableModel = (DefaultTableModel) tableList.getModel();
             tableModel.setRowCount(0);
             dataList.getAllStudnet();
-            for (Student sv : dataList.getAllStudnet()) {
-                tableModel.addRow(new Object[]{sv.getID(), sv.getName(), sv.getEmail(), sv.getPhone(), Gender(sv.isGender()), sv.getAddress(), sv.getImg()});
+            for (Student student : dataList.getAllStudnet()) {
+                tableModel.addRow(new Object[]{student.getID(), student.getName(), student.getEmail(), student.getPhone(), Gender(student.isGender()), student.getAddress(), student.getImg()});
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -341,7 +337,7 @@ public class StudentManager extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lblImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/anh1.png"))); // NOI18N
+        lblImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ImageMD/anh.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -352,8 +348,9 @@ public class StudentManager extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/search-icon.png"))); // NOI18N
@@ -465,11 +462,11 @@ public class StudentManager extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15)
-                        .addComponent(btnChooseImgae, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnChooseImgae, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -501,8 +498,8 @@ public class StudentManager extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         try {
             if (checkForm()) {
-                for (Student sv : dataList.getAllStudnet()) {
-                    if (sv.getID().equals(txtID.getText())) {
+                for (Student student : dataList.getAllStudnet()) {
+                    if (student.getID().equals(txtID.getText())) {
                         JOptionPane.showMessageDialog(this, "Error : Same student");
                         return;
                     }
@@ -553,7 +550,28 @@ public class StudentManager extends javax.swing.JFrame {
     }//GEN-LAST:event_tableListMouseClicked
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-
+        if (checkID(txtID)) {
+            try {
+                sv = dataList.findStudent(txtID.getText());
+                if (sv != null) {
+                    txtID.setText(sv.getID());
+                    txtName.setText(sv.getName());
+                    txtEmail.setText(sv.getEmail());
+                    txtPhone.setText(sv.getPhone());
+                    if (sv.isGender()) {
+                        rdoMale.setSelected(true);
+                    } else {
+                        rdoFemale.setSelected(false);
+                    }
+                    txtAddress.setText(sv.getAddress());
+                    linkImage = sv.getImg();
+                    lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
+                }else{
+                    JOptionPane.showMessageDialog(this, "Student Not Found");
+                }
+            } catch (Exception e) {
+            }
+        }
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnlogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlogoutActionPerformed

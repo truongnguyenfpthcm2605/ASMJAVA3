@@ -8,6 +8,7 @@ import DataBase.ShareDataUSer;
 import DataBase.userDAO;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import model.Users;
 
 
 /**
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 public class LoginForm extends javax.swing.JFrame {
    
       userDAO dataUser = new userDAO();
+      Users  user = new Users();
     /**
      * Creates new form LoginForm
      */
@@ -182,11 +184,23 @@ public class LoginForm extends javax.swing.JFrame {
         try {
             if(checkForm()){
                    String pass = new String(txtPass.getPassword());
-                if(dataUser.checkLogin(txtUser.getText(), pass)!= null){
+                 user =  dataUser.checkLogin(txtUser.getText(), pass);
+                if(user!= null){
                     JOptionPane.showMessageDialog(this, "Login Successfull");
-                    ShareDataUSer.InforUser = dataUser.checkLogin(txtUser.getText(), pass);
-                    StudentManager st = new StudentManager();
-                    st.setVisible(true);
+  //                  ShareDataUSer.InforUser = dataUser.checkLogin(txtUser.getText(), pass);
+                    if(user.getRole().equals("gv")){
+                        MarksManager  m = new MarksManager();
+                        m.setVisible(true);
+                    }else if(user.getRole().equals("sv")){
+                       StundentInformation sv = new StundentInformation();
+                       sv.setVisible(true);
+                    }else if(user.getRole().equals("ad")){
+                      StudentManager sd = new StudentManager();
+                      sd.setVisible(true);
+                    }else{
+                        JOptionPane.showMessageDialog(this, "No Information");
+                    }
+                  
                     this.dispose();
             }else{
                     JOptionPane.showMessageDialog(this, "Wrong user or password");
@@ -202,9 +216,10 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_ckbShowpassActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        OtptionLogin login = new OtptionLogin();
+        login.setVisible(true);
         this.dispose();
-        OtptionLogin option = new OtptionLogin();
-        option.setVisible(true);
+        
     }//GEN-LAST:event_btnCancelActionPerformed
 
     /**

@@ -18,10 +18,11 @@ public class OtptionLogin extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
-    private void ShowFormLogin(){
-        LoginForm login = new LoginForm();
-        login.setVisible(true);
+    public void ShowForm(){
+        LoginForm loginForm = new LoginForm();
+        loginForm.setVisible(true);
     }
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,18 +94,18 @@ public class OtptionLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentActionPerformed
-       ShowFormLogin();
+     ShowForm();
        this.dispose();
        
     }//GEN-LAST:event_btnStudentActionPerformed
 
     private void btnTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherActionPerformed
-          ShowFormLogin();
+        ShowForm();
           this.dispose();
     }//GEN-LAST:event_btnTeacherActionPerformed
 
     private void btnEducationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducationActionPerformed
-           ShowFormLogin();
+        ShowForm();
            this.dispose();
     }//GEN-LAST:event_btnEducationActionPerformed
 

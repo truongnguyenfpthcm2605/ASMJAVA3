@@ -4,14 +4,27 @@
  */
 package view;
 
+import DataBase.GradeDAO;
+import DataBase.StudentDAO;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import model.CheckData;
+import model.Grade;
+import model.Student;
 
 /**
  *
  * @author truong
  */
 public class MarksManager extends javax.swing.JFrame {
+
     DefaultTableModel tablemodel;
+    CheckData data = new CheckData();
+    Grade gd;
+    GradeDAO dataGrade = new GradeDAO();
+
     /**
      * Creates new form MarksManager
      */
@@ -20,10 +33,107 @@ public class MarksManager extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         addTitlleTable();
+        fillTable();
     }
-    private void addTitlleTable(){
+
+    private void addTitlleTable() {
         tablemodel = (DefaultTableModel) tableList.getModel();
-        tablemodel.setColumnIdentifiers( new String[]{"Code","Name","Mark","Literature","English","AvgMarks"});
+        tablemodel.setColumnIdentifiers(new String[]{"Code", "Name", "Mark", "Literature", "English", "AvgMarks"});
+    }
+
+    private boolean checkValiDate(JTextField a) {
+        if (a.getText().isEmpty()) {
+            a.setBackground(Color.YELLOW);
+            return false;
+        } else {
+            a.setBackground(Color.white);
+        }
+        return true;
+
+    }
+
+    private boolean checkID(JTextField txtID) {
+        if (!checkValiDate(txtID)) {
+            JOptionPane.showMessageDialog(this, "ID Students not is empty");
+            return false;
+        } else if (!data.checkMaSv(txtID.getText())) {
+            JOptionPane.showMessageDialog(this, "ID Student wrong format!");
+            txtID.setBackground(Color.yellow);
+            return false;
+        } else {
+            txtID.setBackground(Color.white);
+        }
+        return true;
+    }
+
+    public boolean checkForm() {
+
+        // check id
+        if (!checkID(txtCodeStudent)) {
+            return false;
+        }
+        // check Toan
+        if (!checkValiDate(txtMath)) {
+            JOptionPane.showMessageDialog(this, "Math is not empty");
+            return false;
+        } else if (!data.CheckPoint(txtMath.getText())) {
+            JOptionPane.showMessageDialog(this, "Math is Number , (0-10)");
+            txtMath.setBackground(Color.yellow);
+            return false;
+        } else {
+            txtMath.setBackground(Color.WHITE);
+        }
+        // check ngu van
+        if (!checkValiDate(txtIden)) {
+            JOptionPane.showMessageDialog(this, "Indentifies is not empty");
+            return false;
+        } else if (!data.CheckPoint(txtIden.getText())) {
+            JOptionPane.showMessageDialog(this, "Indentifies is Number , (0-10)");
+            txtIden.setBackground(Color.yellow);
+            return false;
+        } else {
+            txtIden.setBackground(Color.WHITE);
+        }
+
+        // check anh van
+        if (!checkValiDate(txtEnglish)) {
+            JOptionPane.showMessageDialog(this, "English is not empty");
+            return false;
+        } else if (!data.CheckPoint(txtEnglish.getText())) {
+            JOptionPane.showMessageDialog(this, "English is Number , (0-10)");
+            txtEnglish.setBackground(Color.yellow);
+            return false;
+        } else {
+            txtEnglish.setBackground(Color.WHITE);
+        }
+
+        return true;
+    }
+
+    private void reset() {
+        txtID.setText("");
+        txtCodeStudent.setText("");
+        txtMath.setText("");
+        txtIden.setText("");
+        txtEnglish.setText("");
+        lblName.setText("");
+        txtID.setBackground(Color.white);
+        txtCodeStudent.setBackground(Color.white);
+        txtMath.setBackground(Color.white);
+        txtIden.setBackground(Color.white);
+        txtEnglish.setBackground(Color.white);
+
+    }
+    private void fillTable(){
+        try {
+            tablemodel = (DefaultTableModel) tableList.getModel();
+            tablemodel.setRowCount(0);
+            for (Grade gd : dataGrade.getTop3Grade(3)) {
+                tablemodel.addRow(new Object[]{gd.getId(),gd.getIDStudent(),gd.getMark(),gd.getIdentifiers(),gd.getEnglish(),
+                (gd.getMark()+gd.getIdentifiers()+gd.getEnglish())/3});
+            }
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -70,6 +180,7 @@ public class MarksManager extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableList = new javax.swing.JTable();
         jLabel15 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,7 +190,7 @@ public class MarksManager extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Search"));
 
-        jLabel2.setText("Code Student : ");
+        jLabel2.setText("ID :");
 
         txtID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -89,6 +200,11 @@ public class MarksManager extends javax.swing.JFrame {
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/search-icon.png"))); // NOI18N
         btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -96,10 +212,10 @@ public class MarksManager extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtID)
+                .addGap(18, 18, 18)
                 .addComponent(btnSearch)
                 .addGap(15, 15, 15))
         );
@@ -121,7 +237,7 @@ public class MarksManager extends javax.swing.JFrame {
 
         jLabel3.setText("Full Name :");
 
-        jLabel4.setText("Code Students : ");
+        jLabel4.setText("ID :");
 
         jLabel5.setText("Math :");
 
@@ -129,12 +245,35 @@ public class MarksManager extends javax.swing.JFrame {
 
         jLabel7.setText("English :");
 
+        lblName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblName.setForeground(new java.awt.Color(102, 102, 255));
-        lblName.setText("Nguyen Van Truong");
 
+        txtCodeStudent.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCodeStudentFocusLost(evt);
+            }
+        });
         txtCodeStudent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCodeStudentActionPerformed(evt);
+            }
+        });
+
+        txtMath.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMathFocusLost(evt);
+            }
+        });
+
+        txtIden.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMathFocusLost(evt);
+            }
+        });
+
+        txtEnglish.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMathFocusLost(evt);
             }
         });
 
@@ -144,7 +283,6 @@ public class MarksManager extends javax.swing.JFrame {
 
         lblAvg.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblAvg.setForeground(new java.awt.Color(51, 51, 255));
-        lblAvg.setText("9.0");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -221,15 +359,35 @@ public class MarksManager extends javax.swing.JFrame {
 
         btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/new-file-icon.png"))); // NOI18N
         btnNew.setText("New");
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
 
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Save-icon.png"))); // NOI18N
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/exit-Close-icon.png"))); // NOI18N
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Text-Edit-icon.png"))); // NOI18N
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -302,6 +460,14 @@ public class MarksManager extends javax.swing.JFrame {
 
         jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/fpoly2.png"))); // NOI18N
 
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/inside-logout-icon.png"))); // NOI18N
+        btnLogout.setText("Logout");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -316,11 +482,16 @@ public class MarksManager extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addComponent(jLabel15)
         );
         layout.setVerticalGroup(
@@ -330,14 +501,19 @@ public class MarksManager extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnLogout)
+                        .addGap(19, 19, 19)))
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -354,6 +530,122 @@ public class MarksManager extends javax.swing.JFrame {
     private void txtCodeStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodeStudentActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCodeStudentActionPerformed
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        reset();
+
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        this.dispose();
+        OtptionLogin option = new OtptionLogin();
+        option.setVisible(true);
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        try {
+            if (checkForm()) {
+                gd = new Grade();
+                gd.setIDStudent(txtCodeStudent.getText());
+                gd.setMark(Float.parseFloat(txtMath.getText()));
+                gd.setIdentifiers(Float.parseFloat(txtIden.getText()));
+                gd.setEnglish(Float.parseFloat(txtEnglish.getText()));
+                if (dataGrade.FindbyIDGrade(txtCodeStudent.getText()) != null) {
+                    int choose = JOptionPane.showConfirmDialog(this, "ID Student is exist,Do you want update this grade student", "Nodify", JOptionPane.YES_NO_OPTION);
+                    if (choose == JOptionPane.NO_OPTION) {
+                        return;
+                    } else {
+                        dataGrade.Update(gd);
+                        JOptionPane.showMessageDialog(this, "Update Successfull");
+                        fillTable();
+                    }
+                } else {
+                    if (dataGrade.Insert(gd)) {
+                        JOptionPane.showMessageDialog(this, "Save successfull");
+                        fillTable();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Save Fail");
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "You can't new Student");
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void txtCodeStudentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCodeStudentFocusLost
+        try {
+            StudentDAO sv = new StudentDAO();
+            Student sc = sv.findStudent(txtCodeStudent.getText());
+            if (sc != null) {
+                lblName.setText(sc.getName());
+            } else {
+                lblName.setText("No exists");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_txtCodeStudentFocusLost
+
+    private void txtMathFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMathFocusLost
+        if (txtMath.getText().isEmpty() || txtIden.getText().isEmpty() || txtEnglish.getText().isEmpty()) {
+            return;
+        }
+        float math = Float.parseFloat(txtMath.getText());
+        float Indentifiers = Float.parseFloat(txtIden.getText());
+        float English = Float.parseFloat(txtEnglish.getText());
+        float avg = (math + Indentifiers + English) / 3;
+        String pointavg = String.format("%.2f", avg);
+        lblAvg.setText(pointavg);
+
+    }//GEN-LAST:event_txtMathFocusLost
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        try {
+            if(!checkID(txtID)){
+                return;
+            }
+            gd = dataGrade.FindbyIDGrade(txtID.getText());
+            if (gd != null) {
+                txtCodeStudent.setText(gd.getIDStudent());
+                txtMath.setText(String.valueOf(gd.getMark()));
+                txtIden.setText(String.valueOf(gd.getIdentifiers()));
+                txtEnglish.setText(String.valueOf(gd.getEnglish()));
+                txtMathFocusLost(null);
+                txtCodeStudentFocusLost(null);
+              
+            }else{
+                JOptionPane.showMessageDialog(this, "Student not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        btnSaveActionPerformed(evt);
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+       if(!checkID(txtID)){
+           return;
+       }else{
+           try {
+               if(dataGrade.DeleteByID(txtID.getText())){
+                   JOptionPane.showMessageDialog(this, "Delete Success Full");
+                   fillTable();
+               }else{
+                   JOptionPane.showMessageDialog(this, "Delete fail");
+               }
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+           
+       }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -394,6 +686,7 @@ public class MarksManager extends javax.swing.JFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnFirst;
     private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnSave;
@@ -427,4 +720,6 @@ public class MarksManager extends javax.swing.JFrame {
     private javax.swing.JTextField txtIden;
     private javax.swing.JTextField txtMath;
     // End of variables declaration//GEN-END:variables
+
+   
 }

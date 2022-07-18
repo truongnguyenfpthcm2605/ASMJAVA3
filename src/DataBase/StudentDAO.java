@@ -68,7 +68,6 @@ public class StudentDAO {
             try ( ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     Student sv = CreateStudent(rs);
-
                     return sv;
                 }
             }
