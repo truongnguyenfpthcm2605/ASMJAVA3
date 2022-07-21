@@ -26,6 +26,7 @@ public class LoginForm extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+       
 
     }
 
@@ -187,7 +188,8 @@ public class LoginForm extends javax.swing.JFrame {
                  user =  dataUser.checkLogin(txtUser.getText(), pass);
                 if(user!= null){
                     JOptionPane.showMessageDialog(this, "Login Successfull");
-  //                  ShareDataUSer.InforUser = dataUser.checkLogin(txtUser.getText(), pass);
+                    
+                 ShareDataUSer.InforUser = dataUser.checkLogin(txtUser.getText(), pass);
                     if(user.getRole().equals("gv")){
                         MarksManager  m = new MarksManager();
                         m.setVisible(true);

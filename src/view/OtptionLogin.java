@@ -1,8 +1,9 @@
+package view;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package view;
 
 /**
  *
@@ -38,6 +39,7 @@ public class OtptionLogin extends javax.swing.JFrame {
         btnStudent = new javax.swing.JButton();
         btnTeacher = new javax.swing.JButton();
         btnEducation = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,6 +68,14 @@ public class OtptionLogin extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnEducation);
+
+        jButton1.setText("Register");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,6 +119,12 @@ public class OtptionLogin extends javax.swing.JFrame {
            this.dispose();
     }//GEN-LAST:event_btnEducationActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        LogUpForm form = new LogUpForm();
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -148,6 +164,7 @@ public class OtptionLogin extends javax.swing.JFrame {
     private javax.swing.JButton btnEducation;
     private javax.swing.JButton btnStudent;
     private javax.swing.JButton btnTeacher;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

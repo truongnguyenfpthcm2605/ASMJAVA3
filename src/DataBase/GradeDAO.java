@@ -59,7 +59,6 @@ public class GradeDAO {
         try (
                  Connection con = ConnectData.ConnecttoSQL();  PreparedStatement pstmt = con.prepareStatement(sql);) {
             pstmt.setString(1, id);
-
             try ( ResultSet rs = pstmt.executeQuery();) {
                 if (rs.next()) {
                     Grade gd = InitGrade(rs);
@@ -80,6 +79,7 @@ public class GradeDAO {
         gd.setEnglish(rs.getFloat(4));
         return gd;
     }
+
     public List<Grade> getAllGrade() throws Exception {
         String sql = "select * from GRADE";
         try (
@@ -92,12 +92,13 @@ public class GradeDAO {
                 }
                 return list;
             }
-            
+
         }
 
     }
-     public List<Grade> getTop3Grade(int top) throws Exception {
-        String sql = "select top "+  top + " * ,((toan+nguvan+tienganh)/3) as tb from GRADE order by tb desc";
+
+    public List<Grade> getTop3Grade(int top) throws Exception {
+        String sql = "select top " + top + " * ,((toan+nguvan+tienganh)/3) as tb from GRADE order by tb desc";
         try (
                  Connection con = ConnectData.ConnecttoSQL();  PreparedStatement pstmt = con.prepareStatement(sql);) {
             try ( ResultSet rs = pstmt.executeQuery();) {
@@ -108,7 +109,7 @@ public class GradeDAO {
                 }
                 return list;
             }
-            
+
         }
 
     }

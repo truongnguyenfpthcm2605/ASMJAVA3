@@ -12,11 +12,21 @@ public class Users {
     public String user;
     public String pass;
     public String role;
+    public String masv;
 
-    public Users(String user, String pass, String role) {
+    public Users(String user, String pass, String role,String masv) {
         this.user = user;
         this.pass = pass;
         this.role = role;
+        this.masv = masv;
+    }
+
+    public String getMasv() {
+        return masv;
+    }
+
+    public void setMasv(String masv) {
+        this.masv = masv;
     }
 
     public Users() {

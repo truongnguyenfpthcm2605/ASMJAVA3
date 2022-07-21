@@ -14,7 +14,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.CheckData;
 import DataBase.StudentDAO;
-import java.util.List;
 import model.Student;
 
 /**
@@ -162,6 +161,11 @@ public class StudentManager extends javax.swing.JFrame {
     private boolean chooseGender() {
         return rdoMale.isSelected();
     }
+    public  String LinkImage(String img){
+        String newlink = img.substring(img.indexOf("src"), img.length());
+        String link2 = newlink.replace("\\", "/");
+        return "./"+link2;
+    }
 
     public String Gender(boolean a) {
         if (a) {
@@ -244,6 +248,7 @@ public class StudentManager extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tableList = new javax.swing.JTable();
         btnlogout = new javax.swing.JButton();
+        ChangePassword = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -431,6 +436,14 @@ public class StudentManager extends javax.swing.JFrame {
             }
         });
 
+        ChangePassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Text-Edit-icon.png"))); // NOI18N
+        ChangePassword.setText("Change Pasword");
+        ChangePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChangePasswordActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -438,21 +451,23 @@ public class StudentManager extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(199, 199, 199)
                 .addComponent(jLabel2))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnChooseImgae, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane2)))
             .addComponent(jLabel1)
             .addGroup(layout.createSequentialGroup()
-                .addGap(226, 226, 226)
-                .addComponent(btnlogout, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ChangePassword)
+                        .addGap(60, 60, 60)
+                        .addComponent(btnlogout, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnChooseImgae, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane2))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -472,7 +487,9 @@ public class StudentManager extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnlogout)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnlogout)
+                    .addComponent(ChangePassword))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
@@ -511,10 +528,12 @@ public class StudentManager extends javax.swing.JFrame {
                 sv.setPhone(txtPhone.getText());
                 sv.setGender(chooseGender());
                 sv.setAddress(txtAddress.getText());
-                sv.setImg(linkImage);
+                
+                sv.setImg(LinkImage(linkImage));
                 if (dataList.Insert(sv)) {
                     JOptionPane.showMessageDialog(this, "Student save to SQL successfull");
                     fillTable();
+                     reset();
                 } else {
                     JOptionPane.showMessageDialog(this, "Save fail");
                 }
@@ -530,10 +549,12 @@ public class StudentManager extends javax.swing.JFrame {
                 if (dataList.Delete(txtID.getText())) {
                     JOptionPane.showMessageDialog(this, "Delete student to SQL successfull");
                     fillTable();
+                     reset();
                 } else {
                     JOptionPane.showMessageDialog(this, "Delete fail Student not found");
                 }
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "You can't Delete");
                 e.printStackTrace();
             }
         }
@@ -575,9 +596,10 @@ public class StudentManager extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnlogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlogoutActionPerformed
+       OtptionLogin optLogin = new OtptionLogin();
+       optLogin.setVisible(true);
         this.dispose();
-        OtptionLogin option = new OtptionLogin();
-        option.setVisible(true);
+
     }//GEN-LAST:event_btnlogoutActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -591,10 +613,11 @@ public class StudentManager extends javax.swing.JFrame {
                     sv.setPhone(txtPhone.getText());
                     sv.setGender(chooseGender());
                     sv.setAddress(txtAddress.getText());
-                    sv.setImg(linkImage);
+                    sv.setImg(LinkImage(linkImage));
                     if (dataList.Update(sv)) {
                         JOptionPane.showMessageDialog(this, "Update student to SQL successfull");
                         fillTable();
+                        reset();
                     } else {
                         JOptionPane.showMessageDialog(this, "Update fail");
                     }
@@ -605,6 +628,11 @@ public class StudentManager extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void ChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangePasswordActionPerformed
+        ChangePassword change = new ChangePassword();
+        change.setVisible(true);
+    }//GEN-LAST:event_ChangePasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -634,6 +662,7 @@ public class StudentManager extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+      
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new StudentManager().setVisible(true);
@@ -642,6 +671,7 @@ public class StudentManager extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ChangePassword;
     private javax.swing.JButton btnChooseImgae;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnNew;

@@ -7,6 +7,7 @@ package view;
 import DataBase.GradeDAO;
 import DataBase.StudentDAO;
 import java.awt.Color;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -20,10 +21,13 @@ import model.Student;
  */
 public class MarksManager extends javax.swing.JFrame {
 
+    int locationMouse = -1;
     DefaultTableModel tablemodel;
     CheckData data = new CheckData();
     Grade gd;
     GradeDAO dataGrade = new GradeDAO();
+    Student sv = new Student();
+    StudentDAO studentDAO = new StudentDAO();
 
     /**
      * Creates new form MarksManager
@@ -110,6 +114,21 @@ public class MarksManager extends javax.swing.JFrame {
         return true;
     }
 
+    public void ShowFrom(int a) {
+        try {
+            if (a != -1) {
+                List<Grade> list = dataGrade.getTop3Grade(3);
+                Grade gd = list.get(a);
+                txtCodeStudent.setText(gd.getIDStudent());
+                txtMath.setText(String.valueOf(gd.getMark()));
+                txtIden.setText(String.valueOf(gd.getIdentifiers()));
+                txtEnglish.setText(String.valueOf(gd.getEnglish()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void reset() {
         txtID.setText("");
         txtCodeStudent.setText("");
@@ -124,13 +143,14 @@ public class MarksManager extends javax.swing.JFrame {
         txtEnglish.setBackground(Color.white);
 
     }
-    private void fillTable(){
+
+    private void fillTable() {
         try {
             tablemodel = (DefaultTableModel) tableList.getModel();
             tablemodel.setRowCount(0);
             for (Grade gd : dataGrade.getTop3Grade(3)) {
-                tablemodel.addRow(new Object[]{gd.getId(),gd.getIDStudent(),gd.getMark(),gd.getIdentifiers(),gd.getEnglish(),
-                (gd.getMark()+gd.getIdentifiers()+gd.getEnglish())/3});
+                tablemodel.addRow(new Object[]{gd.getId(), gd.getIDStudent(), gd.getMark(), gd.getIdentifiers(), gd.getEnglish(),
+                    (gd.getMark() + gd.getIdentifiers() + gd.getEnglish()) / 3});
             }
         } catch (Exception e) {
         }
@@ -181,6 +201,8 @@ public class MarksManager extends javax.swing.JFrame {
         tableList = new javax.swing.JTable();
         jLabel15 = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
+        ChangePassword = new javax.swing.JButton();
+        btnChange = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -422,15 +444,35 @@ public class MarksManager extends javax.swing.JFrame {
         jPanel4.setLayout(flowLayout1);
 
         btnFirst.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Back-icon.png"))); // NOI18N
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnFirst);
 
         btnback.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/back-icon (1).png"))); // NOI18N
+        btnback.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbackActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnback);
 
         btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/forward-icon (1).png"))); // NOI18N
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnNext);
 
         btnLast.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Next-icon.png"))); // NOI18N
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnLast);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -456,6 +498,11 @@ public class MarksManager extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableList);
 
         jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/fpoly2.png"))); // NOI18N
@@ -468,31 +515,59 @@ public class MarksManager extends javax.swing.JFrame {
             }
         });
 
+        ChangePassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Text-Edit-icon.png"))); // NOI18N
+        ChangePassword.setText("Change Pasword");
+
+        btnChange.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Text-Edit-icon.png"))); // NOI18N
+        btnChange.setText("Change Password");
+        btnChange.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                btnChangeMouseDragged(evt);
+            }
+        });
+        btnChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(186, 186, 186)
-                .addComponent(jLabel1))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addComponent(jLabel15)
+                        .addComponent(btnChange)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(186, 186, 186)
+                        .addComponent(jLabel1))
+                    .addComponent(jLabel15))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(ChangePassword)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -501,23 +576,27 @@ public class MarksManager extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnLogout)
-                        .addGap(19, 19, 19)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLogout)
+                    .addComponent(btnChange))
+                .addGap(0, 12, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 341, Short.MAX_VALUE)
+                    .addComponent(ChangePassword)
+                    .addGap(0, 341, Short.MAX_VALUE)))
         );
 
         pack();
@@ -538,8 +617,8 @@ public class MarksManager extends javax.swing.JFrame {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         this.dispose();
-        OtptionLogin option = new OtptionLogin();
-        option.setVisible(true);
+        OtptionLogin opLogin = new OtptionLogin();
+        opLogin.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -605,7 +684,7 @@ public class MarksManager extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         try {
-            if(!checkID(txtID)){
+            if (!checkID(txtID)) {
                 return;
             }
             gd = dataGrade.FindbyIDGrade(txtID.getText());
@@ -616,8 +695,8 @@ public class MarksManager extends javax.swing.JFrame {
                 txtEnglish.setText(String.valueOf(gd.getEnglish()));
                 txtMathFocusLost(null);
                 txtCodeStudentFocusLost(null);
-              
-            }else{
+
+            } else {
                 JOptionPane.showMessageDialog(this, "Student not found");
             }
         } catch (Exception e) {
@@ -630,22 +709,109 @@ public class MarksManager extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-       if(!checkID(txtID)){
-           return;
-       }else{
-           try {
-               if(dataGrade.DeleteByID(txtID.getText())){
-                   JOptionPane.showMessageDialog(this, "Delete Success Full");
-                   fillTable();
-               }else{
-                   JOptionPane.showMessageDialog(this, "Delete fail");
-               }
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-           
-       }
+        if (!checkID(txtCodeStudent)) {
+            return;
+        } else {
+            try {
+                if (studentDAO.findStudent(txtCodeStudent.getText())!=null) {
+                    JOptionPane.showMessageDialog(this, "You can't Delete it,Because you not role");
+                } else {
+                  if(dataGrade.DeleteByID(txtCodeStudent.getText())){
+                      JOptionPane.showMessageDialog(this, "Delete  successfull");
+                      fillTable();
+                      txtMathFocusLost(null);
+                      txtCodeStudentFocusLost(null);
+                  }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
+        locationMouse = tableList.getSelectedRow();
+        ShowFrom(locationMouse);
+    }//GEN-LAST:event_tableListMouseClicked
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        try {
+            locationMouse = tableList.getSelectedRow();
+            if (locationMouse != -1) {
+                locationMouse = dataGrade.getTop3Grade(3).size() - 1;
+                ShowFrom(locationMouse);
+                tableList.setRowSelectionInterval(locationMouse, locationMouse);
+                txtMathFocusLost(null);
+                txtCodeStudentFocusLost(null);
+
+            }
+        } catch (Exception e) {
+        }
+
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        try {
+            locationMouse = tableList.getSelectedRow();
+            if (locationMouse != -1) {
+                locationMouse++;
+                if (locationMouse > dataGrade.getTop3Grade(3).size() - 1) {
+                    locationMouse = 0;
+                }
+                ShowFrom(locationMouse);
+                tableList.setRowSelectionInterval(locationMouse, locationMouse);
+                txtMathFocusLost(null);
+                txtCodeStudentFocusLost(null);
+
+            }
+        } catch (Exception e) {
+        }
+
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
+        try {
+            locationMouse = tableList.getSelectedRow();
+            if (locationMouse != -1) {
+                locationMouse--;
+                if (locationMouse < 0) {
+                    locationMouse = dataGrade.getTop3Grade(3).size() - 1;
+                }
+                ShowFrom(locationMouse);
+                tableList.setRowSelectionInterval(locationMouse, locationMouse);
+                txtMathFocusLost(null);
+                txtCodeStudentFocusLost(null);
+
+            }
+        } catch (Exception e) {
+        }
+
+    }//GEN-LAST:event_btnbackActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        try {
+            locationMouse = tableList.getSelectedRow();
+            if (locationMouse != -1) {
+                locationMouse = 0;
+                ShowFrom(locationMouse);
+                tableList.setRowSelectionInterval(locationMouse, locationMouse);
+                txtMathFocusLost(null);
+                txtCodeStudentFocusLost(null);
+
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private void btnChangeMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChangeMouseDragged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnChangeMouseDragged
+
+    private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+           ChangePassword change = new ChangePassword();
+        change.setVisible(true);
+    }//GEN-LAST:event_btnChangeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -683,6 +849,8 @@ public class MarksManager extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ChangePassword;
+    private javax.swing.JButton btnChange;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnFirst;
     private javax.swing.JButton btnLast;
@@ -721,5 +889,4 @@ public class MarksManager extends javax.swing.JFrame {
     private javax.swing.JTextField txtMath;
     // End of variables declaration//GEN-END:variables
 
-   
 }

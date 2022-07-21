@@ -50,5 +50,8 @@ public class CheckData {
         }
         return true;
     }
+    public boolean checkUSerOrPasss(String user){
+        return user.length() <=10;
+    }
 
 }
