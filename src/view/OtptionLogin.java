@@ -4,7 +4,6 @@ package view;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author truong
@@ -19,11 +18,11 @@ public class OtptionLogin extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
-    public void ShowForm(){
+
+    public void ShowForm() {
         LoginForm loginForm = new LoginForm();
         loginForm.setVisible(true);
     }
- 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,9 +42,16 @@ public class OtptionLogin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/fptbg.jpg"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/logofptbanner.png"))); // NOI18N
 
+        jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 10));
+
+        btnStudent.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnStudent.setForeground(new java.awt.Color(255, 153, 0));
+        btnStudent.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Student-3-icon.png"))); // NOI18N
         btnStudent.setText("Student");
+        btnStudent.setBorderPainted(false);
         btnStudent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStudentActionPerformed(evt);
@@ -53,7 +59,11 @@ public class OtptionLogin extends javax.swing.JFrame {
         });
         jPanel1.add(btnStudent);
 
+        btnTeacher.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnTeacher.setForeground(new java.awt.Color(0, 255, 0));
+        btnTeacher.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/teacher.png"))); // NOI18N
         btnTeacher.setText("Teacher");
+        btnTeacher.setBorderPainted(false);
         btnTeacher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTeacherActionPerformed(evt);
@@ -61,7 +71,11 @@ public class OtptionLogin extends javax.swing.JFrame {
         });
         jPanel1.add(btnTeacher);
 
+        btnEducation.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEducation.setForeground(new java.awt.Color(255, 51, 51));
+        btnEducation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Students-icon.png"))); // NOI18N
         btnEducation.setText("Education");
+        btnEducation.setBorderPainted(false);
         btnEducation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEducationActionPerformed(evt);
@@ -69,7 +83,10 @@ public class OtptionLogin extends javax.swing.JFrame {
         });
         jPanel1.add(btnEducation);
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Files-Edit-file-icon.png"))); // NOI18N
         jButton1.setText("Register");
+        jButton1.setBorderPainted(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -81,42 +98,37 @@ public class OtptionLogin extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jLabel2))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentActionPerformed
-     ShowForm();
-       this.dispose();
-       
+        ShowForm();
+        this.dispose();
+
     }//GEN-LAST:event_btnStudentActionPerformed
 
     private void btnTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherActionPerformed
         ShowForm();
-          this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnTeacherActionPerformed
 
     private void btnEducationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducationActionPerformed
         ShowForm();
-           this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnEducationActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

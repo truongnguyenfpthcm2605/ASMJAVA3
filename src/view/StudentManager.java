@@ -14,6 +14,9 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.CheckData;
 import DataBase.StudentDAO;
+import java.text.Normalizer;
+import java.util.List;
+import model.MessageNotify;
 import model.Student;
 
 /**
@@ -29,6 +32,7 @@ public class StudentManager extends javax.swing.JFrame {
 
     Student sv;
     public int locationMouse = -1;
+    List<Student> list = ListStudent();
 
     /**
      * Creates new form StudentManager
@@ -40,6 +44,7 @@ public class StudentManager extends javax.swing.JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
         fillTable();
+        this.setResizable(false);
 
     }
 
@@ -48,6 +53,32 @@ public class StudentManager extends javax.swing.JFrame {
         tableModel.setColumnIdentifiers(column);
         tableList.setModel(tableModel);
 
+    }
+
+    public String WriterEmail(String name) {
+        // bo dau 
+        String string = Normalizer.normalize(name, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+        // thanh mang
+        String[] arrStr = string.split(" ");
+        // phan tu cuoi
+        String ten = arrStr[arrStr.length - 1].toLowerCase();
+        String email = txtID.getText().trim().toLowerCase();
+        ten = ten + email + "@fpt.edu.vn";
+        return ten;
+
+    }
+
+    // tra va list cau csdl
+    public List<Student> ListStudent() {
+        try {
+            List<Student> lists = dataList.getAllStudnet();
+            if (lists != null) {
+                return lists;
+            }
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     // resize img
@@ -161,10 +192,11 @@ public class StudentManager extends javax.swing.JFrame {
     private boolean chooseGender() {
         return rdoMale.isSelected();
     }
-    public  String LinkImage(String img){
+
+    public String LinkImage(String img) {
         String newlink = img.substring(img.indexOf("src"), img.length());
         String link2 = newlink.replace("\\", "/");
-        return "./"+link2;
+        return "./" + link2;
     }
 
     public String Gender(boolean a) {
@@ -175,37 +207,29 @@ public class StudentManager extends javax.swing.JFrame {
     }
 
     public void fillTable() {
-        try {
-            tableModel = (DefaultTableModel) tableList.getModel();
-            tableModel.setRowCount(0);
-            dataList.getAllStudnet();
-            for (Student student : dataList.getAllStudnet()) {
-                tableModel.addRow(new Object[]{student.getID(), student.getName(), student.getEmail(), student.getPhone(), Gender(student.isGender()), student.getAddress(), student.getImg()});
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        tableModel = (DefaultTableModel) tableList.getModel();
+        tableModel.setRowCount(0);
+        for (Student student : list) {
+            tableModel.addRow(new Object[]{student.getID(), student.getName(), student.getEmail(), student.getPhone(), Gender(student.isGender()), student.getAddress(), student.getImg()});
         }
 
     }
 
     private void ShowForm(int i) {
-        try {
-            sv = dataList.getAllStudnet().get(i);
-            txtID.setText(sv.getID());
-            txtName.setText(sv.getName());
-            txtEmail.setText(sv.getEmail());
-            txtPhone.setText(sv.getPhone());
-            if (sv.isGender()) {
-                rdoMale.setSelected(true);
-            } else {
-                rdoFemale.setSelected(false);
-            }
-            txtAddress.setText(sv.getAddress());
-            linkImage = sv.getImg();
-            lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        sv = list.get(i);
+        txtID.setText(sv.getID());
+        txtName.setText(sv.getName());
+        txtEmail.setText(sv.getEmail());
+        txtPhone.setText(sv.getPhone());
+        if (sv.isGender()) {
+            rdoMale.setSelected(true);
+        } else {
+            rdoFemale.setSelected(false);
         }
+        txtAddress.setText(sv.getAddress());
+        linkImage = sv.getImg();
+        lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
 
     }
 
@@ -236,8 +260,6 @@ public class StudentManager extends javax.swing.JFrame {
         txtName = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         txtPhone = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
-        lblImage = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnSearch = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
@@ -249,8 +271,17 @@ public class StudentManager extends javax.swing.JFrame {
         tableList = new javax.swing.JTable();
         btnlogout = new javax.swing.JButton();
         ChangePassword = new javax.swing.JButton();
+        lblImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/fpoly2.png"))); // NOI18N
 
@@ -283,6 +314,36 @@ public class StudentManager extends javax.swing.JFrame {
         txtAddress.setRows(5);
         jScrollPane1.setViewportView(txtAddress);
 
+        txtID.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtIDFocusLost(evt);
+            }
+        });
+        txtID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIDActionPerformed(evt);
+            }
+        });
+
+        txtName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNameFocusLost(evt);
+            }
+        });
+        txtName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNameActionPerformed(evt);
+            }
+        });
+
+        txtEmail.setForeground(new java.awt.Color(0, 255, 0));
+        txtEmail.setEnabled(false);
+        txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtEmailFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -298,18 +359,17 @@ public class StudentManager extends javax.swing.JFrame {
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(rdoMale, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(rdoFemale, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(txtPhone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                        .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtName, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtID, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtID)
+                    .addComponent(txtName)
+                    .addComponent(txtEmail)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(rdoMale, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rdoFemale, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtPhone)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,19 +377,19 @@ public class StudentManager extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -339,22 +399,6 @@ public class StudentManager extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        lblImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ImageMD/anh.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -444,44 +488,58 @@ public class StudentManager extends javax.swing.JFrame {
             }
         });
 
+        lblImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ImageMD/anh.png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(199, 199, 199)
-                .addComponent(jLabel2))
-            .addComponent(jLabel1)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(348, 348, 348))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(ChangePassword)
-                        .addGap(60, 60, 60)
-                        .addComponent(btnlogout, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnChooseImgae, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(jScrollPane2))))
+                        .addContainerGap()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ChangePassword)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnlogout, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnChooseImgae, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane2))))
+                .addGap(23, 23, 23))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnChooseImgae, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(btnChooseImgae, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -490,7 +548,7 @@ public class StudentManager extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnlogout)
                     .addComponent(ChangePassword))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -505,7 +563,7 @@ public class StudentManager extends javax.swing.JFrame {
             File fnameImage = f.getSelectedFile();
             linkImage = fnameImage.getAbsolutePath();
             lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
-            JOptionPane.showMessageDialog(this, "Add Iamge successful");
+            JOptionPane.showMessageDialog(this, "Add Image successful");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please choose Image");
 
@@ -513,50 +571,45 @@ public class StudentManager extends javax.swing.JFrame {
     }//GEN-LAST:event_btnChooseImgaeActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        try {
-            if (checkForm()) {
-                for (Student student : dataList.getAllStudnet()) {
-                    if (student.getID().equals(txtID.getText())) {
-                        JOptionPane.showMessageDialog(this, "Error : Same student");
-                        return;
-                    }
-                }
-                sv = new Student();
-                sv.setID(txtID.getText());
-                sv.setName(txtName.getText());
-                sv.setEmail(txtEmail.getText());
-                sv.setPhone(txtPhone.getText());
-                sv.setGender(chooseGender());
-                sv.setAddress(txtAddress.getText());
-                
-                sv.setImg(LinkImage(linkImage));
-                if (dataList.Insert(sv)) {
-                    JOptionPane.showMessageDialog(this, "Student save to SQL successfull");
-                    fillTable();
-                     reset();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Save fail");
+        if (checkForm()) {
+            txtEmailFocusLost(null);
+            for (Student student : list) {
+                if (student.getID().equals(txtID.getText())) {
+                    JOptionPane.showMessageDialog(this, "Error : Same student");
+                    return;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            sv = new Student();
+            sv.setID(txtID.getText());
+            sv.setName(txtName.getText());
+            sv.setEmail(txtEmail.getText());
+            sv.setPhone(txtPhone.getText());
+            sv.setGender(chooseGender());
+            sv.setAddress(txtAddress.getText());
+            sv.setImg(LinkImage(linkImage));
+            list.add(sv);
+            JOptionPane.showMessageDialog(this, "Student save successfull");
+            fillTable();
+            reset();
+            
         }
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         if (checkID(txtID)) {
-            try {
-                if (dataList.Delete(txtID.getText())) {
-                    JOptionPane.showMessageDialog(this, "Delete student to SQL successfull");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getID().equals(txtID.getText())) {
+                    list.remove(i);
+                    JOptionPane.showMessageDialog(this, "Delete Succcessfull");
                     fillTable();
-                     reset();
+                    reset();
+
                 } else {
-                    JOptionPane.showMessageDialog(this, "Delete fail Student not found");
+                    JOptionPane.showMessageDialog(this, "ID student is not exists");
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "You can't Delete");
-                e.printStackTrace();
             }
+
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -571,61 +624,66 @@ public class StudentManager extends javax.swing.JFrame {
     }//GEN-LAST:event_tableListMouseClicked
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        if (checkID(txtID)) {
-            try {
-                sv = dataList.findStudent(txtID.getText());
-                if (sv != null) {
-                    txtID.setText(sv.getID());
-                    txtName.setText(sv.getName());
-                    txtEmail.setText(sv.getEmail());
-                    txtPhone.setText(sv.getPhone());
-                    if (sv.isGender()) {
+        if (!checkID(txtID)) {
+            return;
+        } else {
+            for (Student svfind : list) {
+                if (svfind.getID().equals(txtID.getText())) {
+                    txtID.setText(svfind.getID());
+                    txtName.setText(svfind.getName());
+                    txtEmail.setText(svfind.getEmail());
+                    txtPhone.setText(svfind.getPhone());
+                    if (svfind.isGender()) {
                         rdoMale.setSelected(true);
                     } else {
                         rdoFemale.setSelected(false);
                     }
-                    txtAddress.setText(sv.getAddress());
-                    linkImage = sv.getImg();
+                    txtAddress.setText(svfind.getAddress());
+                    linkImage = svfind.getImg();
                     lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Student Not Found");
                 }
-            } catch (Exception e) {
             }
         }
+
+
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnlogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlogoutActionPerformed
-       OtptionLogin optLogin = new OtptionLogin();
-       optLogin.setVisible(true);
+        OtptionLogin optLogin = new OtptionLogin();
+        optLogin.setVisible(true);
         this.dispose();
 
     }//GEN-LAST:event_btnlogoutActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        if (checkID(txtID)) {
-            try {
-                if (checkForm()) {
-                    sv = new Student();
-                    sv.setID(txtID.getText());
-                    sv.setName(txtName.getText());
-                    sv.setEmail(txtEmail.getText());
-                    sv.setPhone(txtPhone.getText());
-                    sv.setGender(chooseGender());
-                    sv.setAddress(txtAddress.getText());
-                    sv.setImg(LinkImage(linkImage));
-                    if (dataList.Update(sv)) {
-                        JOptionPane.showMessageDialog(this, "Update student to SQL successfull");
-                        fillTable();
+        if (!checkID(txtID)) {
+            return;
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getID().equals(txtID.getText())) {
+                    if (checkForm()) {
+                        sv = new Student();
+                        sv.setID(txtID.getText());
+                        sv.setName(txtName.getText());
+                        sv.setEmail(txtEmail.getText());
+                        sv.setPhone(txtPhone.getText());
+                        sv.setGender(chooseGender());
+                        sv.setAddress(txtAddress.getText());
+                        sv.setImg(LinkImage(linkImage));
+                        list.set(i, sv);
                         reset();
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Update fail");
+                        fillTable();
+                        JOptionPane.showMessageDialog(this, "Update succseefull");
                     }
+                } else {
+                    JOptionPane.showMessageDialog(this, "ID Student is not found");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
         }
+
 
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -633,6 +691,44 @@ public class StudentManager extends javax.swing.JFrame {
         ChangePassword change = new ChangePassword();
         change.setVisible(true);
     }//GEN-LAST:event_ChangePasswordActionPerformed
+
+    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNameActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        MessageNotify a = new MessageNotify();
+        if (a.QuestionMessage(this, "Do you want to save your changes before exiting?") == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "Save data successfull");
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Program Closed");
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void txtEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmailFocusLost
+        if (checkID(txtID)) {
+            if (!txtName.getText().isEmpty()) {
+                txtEmail.setText(WriterEmail(txtName.getText()));
+            }
+        }
+    }//GEN-LAST:event_txtEmailFocusLost
+
+    private void txtIDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIDFocusLost
+      //  txtEmailFocusLost(null);
+    }//GEN-LAST:event_txtIDFocusLost
+
+    private void txtNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusLost
+        txtEmailFocusLost(null);
+    }//GEN-LAST:event_txtNameFocusLost
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIDActionPerformed
 
     /**
      * @param args the command line arguments
@@ -662,7 +758,6 @@ public class StudentManager extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-      
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new StudentManager().setVisible(true);
@@ -689,7 +784,6 @@ public class StudentManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

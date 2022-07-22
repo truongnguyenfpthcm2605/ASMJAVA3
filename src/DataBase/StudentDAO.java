@@ -108,5 +108,22 @@ public class StudentDAO {
     public StudentDAO() {
 
     }
+    public void InsertAlllData(List<Student> list) throws  Exception{
+        for (int i = 0; i < list.size(); i++) {
+            String insert =  "insert into STUDENTS(MASV,HOTEN,EMAIL,SODT,GIOITINH,DIACHI,HINH) values (?,?,?,?,?,?,?)";
+            try(
+                    Connection com = ConnectData.ConnecttoSQL(); PreparedStatement pstm = com.prepareStatement(insert);
+                    ){
+                Student sv = list.get(i);
+                pstm.setString(1, sv.getID());
+                pstm.setString(2, sv.getName());
+                pstm.setString(3, sv.getEmail());
+                pstm.setString(4, sv.getPhone());
+                pstm.setBoolean(5, sv.isGender());
+                pstm.setString(6, sv.getAddress());
+                pstm.setString(7, sv.getImg());              
+            }
+        }
+    }
 
 }
