@@ -16,7 +16,6 @@ import model.CheckData;
 import DataBase.StudentDAO;
 import java.text.Normalizer;
 import java.util.List;
-import model.MessageNotify;
 import model.Student;
 
 /**
@@ -44,6 +43,7 @@ public class StudentManager extends javax.swing.JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
         fillTable();
+
         this.setResizable(false);
 
     }
@@ -337,7 +337,6 @@ public class StudentManager extends javax.swing.JFrame {
         });
 
         txtEmail.setForeground(new java.awt.Color(0, 255, 0));
-        txtEmail.setEnabled(false);
         txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtEmailFocusLost(evt);
@@ -591,26 +590,31 @@ public class StudentManager extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Student save successfull");
             fillTable();
             reset();
-            
+
         }
 
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        if (checkID(txtID)) {
+        boolean check = false;
+        if (!checkID(txtID)) {
+        } else {
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getID().equals(txtID.getText())) {
                     list.remove(i);
                     JOptionPane.showMessageDialog(this, "Delete Succcessfull");
+                    check = true;
                     fillTable();
                     reset();
-
-                } else {
-                    JOptionPane.showMessageDialog(this, "ID student is not exists");
+                    break;
                 }
+            }
+            if (check == false) {
+                JOptionPane.showMessageDialog(this, "ID Student is not exists");
             }
 
         }
+
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
@@ -624,6 +628,7 @@ public class StudentManager extends javax.swing.JFrame {
     }//GEN-LAST:event_tableListMouseClicked
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        boolean check = false;
         if (!checkID(txtID)) {
             return;
         } else {
@@ -641,9 +646,12 @@ public class StudentManager extends javax.swing.JFrame {
                     txtAddress.setText(svfind.getAddress());
                     linkImage = svfind.getImg();
                     lblImage.setIcon(reSizeImgae(String.valueOf(linkImage)));
-                } else {
-                    JOptionPane.showMessageDialog(this, "Student Not Found");
+                    check = true;
+
                 }
+            }
+            if (check == false) {
+                JOptionPane.showMessageDialog(this, " ID Student is not found");
             }
         }
 
@@ -658,6 +666,7 @@ public class StudentManager extends javax.swing.JFrame {
     }//GEN-LAST:event_btnlogoutActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        boolean check = false;
         if (!checkID(txtID)) {
             return;
         } else {
@@ -675,11 +684,14 @@ public class StudentManager extends javax.swing.JFrame {
                         list.set(i, sv);
                         reset();
                         fillTable();
+                        check = true;
                         JOptionPane.showMessageDialog(this, "Update succseefull");
+                        break;
                     }
-                } else {
-                    JOptionPane.showMessageDialog(this, "ID Student is not found");
                 }
+            }
+            if (check == false) {
+                JOptionPane.showMessageDialog(this, "ID Student is not exists");
             }
 
         }
@@ -697,33 +709,37 @@ public class StudentManager extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        MessageNotify a = new MessageNotify();
-        if (a.QuestionMessage(this, "Do you want to save your changes before exiting?") == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this, "Save data successfull");
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Program Closed");
-        }
+      int  choose = JOptionPane.showConfirmDialog(this, "Save change before existing", "Notify", JOptionPane.YES_NO_OPTION);
+      if(choose == JOptionPane.YES_OPTION){
+          try {            
+             dataList.InsertAllData(list);
+              dataList.ExcutePro();
+              JOptionPane.showMessageDialog(this, "Save data to SQL successfull");     
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+      }
     }//GEN-LAST:event_formWindowClosing
 
     private void txtEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmailFocusLost
         if (checkID(txtID)) {
             if (!txtName.getText().isEmpty()) {
                 txtEmail.setText(WriterEmail(txtName.getText()));
+                txtEmail.setEditable(false);
             }
         }
     }//GEN-LAST:event_txtEmailFocusLost
 
     private void txtIDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIDFocusLost
-      //  txtEmailFocusLost(null);
+        // txtEmailFocusLost(null);
     }//GEN-LAST:event_txtIDFocusLost
 
     private void txtNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusLost
-        txtEmailFocusLost(null);
+        //txtEmailFocusLost(null);
     }//GEN-LAST:event_txtNameFocusLost
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        
+
     }//GEN-LAST:event_formWindowOpened
 
     private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed

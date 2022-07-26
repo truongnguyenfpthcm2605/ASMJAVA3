@@ -12,4 +12,5 @@ import model.Users;
  */
 public class ShareDataUSer {
     public static Users InforUser;
+    public  static String  role;
 }

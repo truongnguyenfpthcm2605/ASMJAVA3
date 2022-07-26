@@ -71,7 +71,6 @@ public class StudentDAO {
                     return sv;
                 }
             }
-
         }
         return null;
     }
@@ -95,7 +94,6 @@ public class StudentDAO {
 
             try ( ResultSet rs = pstmt.executeQuery()) {
                 List<Student> list = new ArrayList<>();
-
                 while (rs.next()) {
                     Student sv = CreateStudent(rs);
                     list.add(sv);
@@ -105,15 +103,13 @@ public class StudentDAO {
         }
     }
 
-    public StudentDAO() {
+    public void InsertAllData(List<Student> list) throws Exception {
 
-    }
-    public void InsertAlllData(List<Student> list) throws  Exception{
-        for (int i = 0; i < list.size(); i++) {
-            String insert =  "insert into STUDENTS(MASV,HOTEN,EMAIL,SODT,GIOITINH,DIACHI,HINH) values (?,?,?,?,?,?,?)";
-            try(
-                    Connection com = ConnectData.ConnecttoSQL(); PreparedStatement pstm = com.prepareStatement(insert);
-                    ){
+        String insert = "insert into bangao(MASV,HOTEN,EMAIL,SODT,GIOITINH,DIACHI,HINH) values (?,?,?,?,?,?,?)";
+        try (
+                 Connection com = ConnectData.ConnecttoSQL();  PreparedStatement pstm = com.prepareStatement(insert);) {
+
+            for (int i = 0; i < list.size(); i++) {
                 Student sv = list.get(i);
                 pstm.setString(1, sv.getID());
                 pstm.setString(2, sv.getName());
@@ -121,9 +117,21 @@ public class StudentDAO {
                 pstm.setString(4, sv.getPhone());
                 pstm.setBoolean(5, sv.isGender());
                 pstm.setString(6, sv.getAddress());
-                pstm.setString(7, sv.getImg());              
+                pstm.setString(7, sv.getImg());
+                pstm.executeUpdate();
             }
+
+            
         }
+    }
+    
+    public void ExcutePro() throws Exception {
+        String exe = "execute  insert_bangao";
+        Connection com = ConnectData.ConnecttoSQL();
+        PreparedStatement pstm = com.prepareStatement(exe);
+        pstm.execute();
+        com.close();
+        pstm.close();
     }
 
 }

@@ -5,6 +5,7 @@
 package view;
 
 import DataBase.GradeDAO;
+import DataBase.ShareDataUSer;
 import DataBase.StudentDAO;
 import java.awt.Color;
 import java.util.List;
@@ -28,6 +29,7 @@ public class MarksManager extends javax.swing.JFrame {
     GradeDAO dataGrade = new GradeDAO();
     Student sv = new Student();
     StudentDAO studentDAO = new StudentDAO();
+    
 
     /**
      * Creates new form MarksManager
@@ -38,7 +40,18 @@ public class MarksManager extends javax.swing.JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         addTitlleTable();
         fillTable();
+        Role();
     }
+    private void Role(){
+        String role = ShareDataUSer.role;
+        if(role.equals("gv")){
+            btnSave.setEnabled(false);
+            btnDelete.setEnabled(false);
+            btnNew.setEnabled(false);
+        }
+    }
+
+    
 
     private void addTitlleTable() {
         tablemodel = (DefaultTableModel) tableList.getModel();
@@ -178,7 +191,6 @@ public class MarksManager extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        lblName = new javax.swing.JLabel();
         txtCodeStudent = new javax.swing.JTextField();
         txtMath = new javax.swing.JTextField();
         txtIden = new javax.swing.JTextField();
@@ -186,6 +198,7 @@ public class MarksManager extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         lblAvg = new javax.swing.JLabel();
+        lblName = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
@@ -266,9 +279,6 @@ public class MarksManager extends javax.swing.JFrame {
 
         jLabel7.setText("English :");
 
-        lblName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblName.setForeground(new java.awt.Color(102, 102, 255));
-
         txtCodeStudent.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtCodeStudentFocusLost(evt);
@@ -319,16 +329,17 @@ public class MarksManager extends javax.swing.JFrame {
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtIden, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                    .addComponent(txtIden, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
                     .addComponent(txtMath, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEnglish)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblName)
+                            .addComponent(txtCodeStudent))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtCodeStudent, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtEnglish))
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -343,12 +354,12 @@ public class MarksManager extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9)
-                    .addComponent(lblName))
+                    .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(23, 23, 23)
@@ -581,7 +592,7 @@ public class MarksManager extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogout)
                     .addComponent(btnChange))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
@@ -698,15 +709,15 @@ public class MarksManager extends javax.swing.JFrame {
             return;
         } else {
             try {
-                if (studentDAO.findStudent(txtCodeStudent.getText())!=null) {
+                if (studentDAO.findStudent(txtCodeStudent.getText()) != null) {
                     JOptionPane.showMessageDialog(this, "You can't Delete it,Because you not role");
                 } else {
-                  if(dataGrade.DeleteByID(txtCodeStudent.getText())){
-                      JOptionPane.showMessageDialog(this, "Delete  successfull");
-                      fillTable();
-                      txtMathFocusLost(null);
-                      txtCodeStudentFocusLost(null);
-                  }
+                    if (dataGrade.DeleteByID(txtCodeStudent.getText())) {
+                        JOptionPane.showMessageDialog(this, "Delete  successfull");
+                        fillTable();
+                        txtMathFocusLost(null);
+                        txtCodeStudentFocusLost(null);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -794,7 +805,7 @@ public class MarksManager extends javax.swing.JFrame {
     }//GEN-LAST:event_btnChangeMouseDragged
 
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
-           ChangePassword change = new ChangePassword();
+        ChangePassword change = new ChangePassword();
         change.setVisible(true);
     }//GEN-LAST:event_btnChangeActionPerformed
 
@@ -864,7 +875,7 @@ public class MarksManager extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAvg;
-    private javax.swing.JLabel lblName;
+    private javax.swing.JTextField lblName;
     private javax.swing.JTable tableList;
     private javax.swing.JTextField txtCodeStudent;
     private javax.swing.JTextField txtEnglish;

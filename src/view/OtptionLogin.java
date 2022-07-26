@@ -1,5 +1,7 @@
 package view;
 
+import DataBase.ShareDataUSer;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -17,11 +19,22 @@ public class OtptionLogin extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        Role();
     }
 
-    public void ShowForm() {
-        LoginForm loginForm = new LoginForm();
-        loginForm.setVisible(true);
+    private void Role() {
+        String role = ShareDataUSer.role;
+        if (role.equals("gv")) {
+            btnStudent.setEnabled(false);
+            btnEducation.setEnabled(false);
+            btnReigster.setEnabled(false);
+        } else if (role.equals("sv")) {
+            btnEducation.setEnabled(false);
+            btnTeacher.setEnabled(false);
+            btnReigster.setEnabled(false);
+        } else {
+            btnStudent.setEnabled(false);
+        }
     }
 
     /**
@@ -38,9 +51,14 @@ public class OtptionLogin extends javax.swing.JFrame {
         btnStudent = new javax.swing.JButton();
         btnTeacher = new javax.swing.JButton();
         btnEducation = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnReigster = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/logofptbanner.png"))); // NOI18N
 
@@ -83,16 +101,16 @@ public class OtptionLogin extends javax.swing.JFrame {
         });
         jPanel1.add(btnEducation);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Files-Edit-file-icon.png"))); // NOI18N
-        jButton1.setText("Register");
-        jButton1.setBorderPainted(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnReigster.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnReigster.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Files-Edit-file-icon.png"))); // NOI18N
+        btnReigster.setText("Register");
+        btnReigster.setBorderPainted(false);
+        btnReigster.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnReigsterActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
+        jPanel1.add(btnReigster);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -116,26 +134,34 @@ public class OtptionLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentActionPerformed
-        ShowForm();
+        StundentInformation std = new StundentInformation();
+        std.setVisible(true);
         this.dispose();
 
     }//GEN-LAST:event_btnStudentActionPerformed
 
     private void btnTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTeacherActionPerformed
-        ShowForm();
+        MarksManager m = new MarksManager();
+        m.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnTeacherActionPerformed
 
     private void btnEducationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducationActionPerformed
-        ShowForm();
+        StudentManager ms = new StudentManager();
+        ms.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnEducationActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnReigsterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReigsterActionPerformed
         LogUpForm form = new LogUpForm();
         form.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnReigsterActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        LoginForm form = new LoginForm();
+        form.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -174,9 +200,9 @@ public class OtptionLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEducation;
+    private javax.swing.JButton btnReigster;
     private javax.swing.JButton btnStudent;
     private javax.swing.JButton btnTeacher;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

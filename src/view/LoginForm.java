@@ -26,8 +26,6 @@ public class LoginForm extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-       
-
     }
 
     public boolean checkForm() {
@@ -187,27 +185,13 @@ public class LoginForm extends javax.swing.JFrame {
                    String pass = new String(txtPass.getPassword());
                  user =  dataUser.checkLogin(txtUser.getText(), pass);
                 if(user!= null){
-                    JOptionPane.showMessageDialog(this, "Login Successfull");
-                    
-                 ShareDataUSer.InforUser = dataUser.checkLogin(txtUser.getText(), pass);
-                    if(user.getRole().equals("gv")){
-                        MarksManager  m = new MarksManager();
-                        m.setVisible(true);
-                    }else if(user.getRole().equals("sv")){
-                       StundentInformation sv = new StundentInformation();
-                       sv.setVisible(true);
-                    }else if(user.getRole().equals("ad")){
-                      StudentManager sd = new StudentManager();
-                      sd.setVisible(true);
-                    }else{
-                        JOptionPane.showMessageDialog(this, "No Information");
-                    }
-                  
-                    this.dispose();
-            }else{
-                    JOptionPane.showMessageDialog(this, "Wrong user or password");
+                    ShareDataUSer.role = user.getRole();
+                    OtptionLogin login = new OtptionLogin();
+                    login.setVisible(true);                  
+                }else{
+                    JOptionPane.showMessageDialog(this, "Wrong user and pass");
                 }
-            }
+                }
         } catch (Exception e) {
             e.printStackTrace();
         }
